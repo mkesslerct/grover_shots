@@ -1,6 +1,6 @@
 #include <assert.h>
-#include <gmp.h>
 #include <math.h>
+#include <gmp.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,11 +14,6 @@ void bincoef_array(mpz_t b[], int K) {
 }
 
 void factK_Stirling(mpz_t S, int K, int l, mpz_t bincoef_a[]) {
-  // Implements K! Stirling(K, l), K <= l of the second kind
-  // from (1.6.7), H. S. Wilf, Generating functionology, 2nd ed., Elsevier, 2013
-  // bincoef_a contains [bincoef(K, 1), bincoef(K, 2), ....., bincoef(K, K)]
-  // modifies S.
-
   mpz_t f_S;
   mpz_t product, powil;
 
@@ -40,7 +35,6 @@ void factK_Stirling(mpz_t S, int K, int l, mpz_t bincoef_a[]) {
 }
 
 void factA_Stirling_array(mpz_t f_S_a[], int A, int m) {
-  // compute A! Stirling(A, l), for A <= l <= m. Modifies f_S_a.
   mpz_t bincoef_a[A];
 
   bincoef_array(bincoef_a, A);
@@ -55,11 +49,6 @@ void factA_Stirling_array(mpz_t f_S_a[], int A, int m) {
 }
 
 void F_array(int A, int M, int n, double pg[], int len_pg, double F_threshold) {
-  // Computes P(X_{A, M}) = n and P(X_{A, M} <= t), for A + 1 <= t <= n, writing
-  // the results as t, P(X_{A, M} = t, P(X_{A, M} <= t) to a csv file. It loops
-  // over the values of pg, the probability of extracting a red ball. For each
-  // pg, a different csv file is generated. F_threshold allows to specify an
-  // early stop, if the cdf(t) > F_threshold
   mpf_t pgg, prg;
 
   mpz_t f_S_a[n - A];
@@ -118,15 +107,10 @@ void F_array(int A, int M, int n, double pg[], int len_pg, double F_threshold) {
       mpf_set_z(bin_coef_f, bin_coef);
       mpf_mul(prob, prob, bin_coef_f);
       mpf_add(sum_prob, sum_prob, prob);
-      fprintf(results_file, "%d,", t);
-      mpf_out_str(results_file, 10, 10, prob);
-      fprintf(results_file, ",");
-      mpf_out_str(results_file, 10, 10, sum_prob);
-      fprintf(results_file, "\n");
+      gmp_fprintf(results_file, "%d,%Ff,%Ff\n", t, prob, sum_prob);
     }
     printf("pg: %f, F(%d) computed, value:", pg[i], t);
-    mpf_out_str(stdout, 10, 10, sum_prob);
-    printf("\n");
+    gmp_printf("%Ff\n", sum_prob);
 
     fclose(results_file);
   }
@@ -165,12 +149,10 @@ int main(int argc, char *argv[]) {
 
   int len_pg = sizeof(pg) / sizeof(pg[0]);
 
-  F_array(A, M, n, pg, len_pg, 0.96);
+  F_array(A, M, n, pg, len_pg, 0.98);
 
   printf("Done!");
 
   return 1;
 }
-
-
 
