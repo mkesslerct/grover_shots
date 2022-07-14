@@ -20,9 +20,9 @@ cum_prob = dict()
 
 pg_values = [0.7, 0.95, 0.999]
 
-M = 1000
-A = 999
-n = 15000
+M = 10
+A = 9
+n = 150
 pg_values = [0.7, 0.95, 0.999]
 
 prob_file_exists = defaultdict(lambda: False)
@@ -57,7 +57,7 @@ if num_prob_files > 0:
 
         ax.annotate(
             f"{p_threshold}",
-            xy=(p_threshold, M),
+            xy=(p_threshold, A + 1),
             xytext=(6, 2),  # 4 points vertical offset.
             textcoords="offset points",
             ha="left",
