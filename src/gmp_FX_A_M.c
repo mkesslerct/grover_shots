@@ -107,10 +107,9 @@ void F_array(int A, int M, int n, double pg[], int len_pg, double F_threshold) {
       mpf_set_z(bin_coef_f, bin_coef);
       mpf_mul(prob, prob, bin_coef_f);
       mpf_add(sum_prob, sum_prob, prob);
-      gmp_fprintf(results_file, "%d,%Ff,%Ff\n", t, prob, sum_prob);
+      gmp_fprintf(results_file, "%d,%.6Ff,%.6Ff\n", t, prob, sum_prob);
     }
-    printf("pg: %f, F(%d) computed, value:", pg[i], t);
-    gmp_printf("%Ff\n", sum_prob);
+    gmp_printf("pg: %f, F(%d) computed, value: %.6Ff\n", pg[i], t, sum_prob);
 
     fclose(results_file);
   }
