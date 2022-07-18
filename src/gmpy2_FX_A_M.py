@@ -1,14 +1,9 @@
-import gmpy2
-from gmpy2 import mpz, mpfr, bincoef, mul, sub, add
-
 import pathlib
-
+from gmpy2 import mpz, mpfr, bincoef, mul, sub, add
 
 FIGURES_DIRECTORY = pathlib.Path("..") / "figures"
 
 RESULTS_DIRECTORY = pathlib.Path("..") / "results"
-
-# gmpy2.get_context().precision = 200000
 
 
 def bincoef_array(K):
@@ -48,7 +43,6 @@ def F_array(A, M, n, pg_values, F_threshold):
     """Returns [P(W_M <= t) for t in range(m, n + 1)] where
     W_M is the drawing on which, for the first time, the number of distinct
     red balls that have been sampled is A + 1
-    If m is not is A + 1, sum_prob_prev is requested
     Implemented formula:
     https://multimediarepository.blob.core.windows.net/imagecontainer/98085adef8164a7997764dafef9b24dc.jpeg
     """
@@ -97,3 +91,11 @@ if __name__ == "__main__":
     pg_values = [0.7, 0.95, 0.999]
 
     F_array(A, M, n, pg_values, F_threshold=0.98)
+
+
+
+
+
+
+
+
