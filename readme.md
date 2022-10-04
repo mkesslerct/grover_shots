@@ -1,5 +1,5 @@
 # Introduction
-  * [x] This repository contains the code  that implements the formulae to be found in the manuscript " " (2022) by Mathieu Kessler[^1], Diego Alonso[^2] and Pedro Sánchez[^2].  They allow to compute the required number of shots to ensure, with probability $p$, to observe all, or a fraction of all the solutions to a search problem, using the Grover's algorithm.
+This repository contains the code  that implements the formulae to be found in the manuscript " " (2022) by Mathieu Kessler[^1], Diego Alonso[^2] and Pedro Sánchez[^2].  They allow to compute the required number of shots to ensure, with probability $p$, to observe all, or a fraction of all the solutions to a search problem, using the Grover's algorithm.
 
 # Contents:
 Following the index of the manuscript, three levels of results are obtained:
@@ -85,7 +85,8 @@ RESULTS_DIR = Path("..") / "results"
 F = pd.read_csv(RESULTS_DIR / "pmf_cdf_A_9_M_10_s_200_700.csv")
 # compute the quantile for p = 0.95 for example
 p = 0.95
-print(f"The required number of shots to observe, with probability {p}, all solutions is {compute_quantile(p, F)}.")
+print(f"The required number of shots to observe, with probability {p},")
+print(f"all solutions is {compute_quantile(p, F)}.")
 ```
 
 
