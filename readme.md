@@ -24,12 +24,14 @@ The function compute_n_approx implements equations (7) and (9) of the manuscript
 It requires numpy and scipy and can be used as:
 
 ``` python
-print("The number of shots required to ensure that, with probability 0.9, we observe all 100 solutions to a search problem, having set pg 0.95 is:")
+print("The number of shots required to ensure that, with probability 0.9, we observe")
+print("all 100 solutions to a search problem, with pg = 0.95 is:")
 print("compute_n_approx(0.9, 99, 100, 0.9, "all")
 ```
 
 ``` python
-print("The number of shots required to ensure that, with probability 0.9, we observe at least half of the 100 solutions to a search problem, having set pg 0.95 is:")
+print("The number of shots required to ensure that, with probability 0.9, we observe")
+print("at least half of the 100 solutions to a search problem, with pg = 0.95 is:")
 print("compute_n_approx(0.9, 49, 100, 0.9, "proportion")
 ```
 
@@ -39,12 +41,12 @@ The implementation of formula (10) requires, for large values of $M$ a high prec
 ### Implementation in C:
 To compile in Linux, assuming that you are in the src directory which contain the .c file:
 
-```
+``` shell
 gcc -o gmp_FX_A_M gmp_FX_A_M.c -O2 -lgmp 
 ```
 
 You can then specify A, M, pg and s as command line arguments:
-```
+``` shell
 ./gmp_FX_A_M 99 100 0.7 1500
 ```
 
