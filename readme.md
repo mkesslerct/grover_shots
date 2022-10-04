@@ -1,5 +1,5 @@
 # Introduction
-This repository contains the code  that implements the formulae to be found in the manuscript " " (2022) by Mathieu Kesler[^1], Diego Alonso[^2] and Pedro Sánchez[^2].  They allow to compute the required number of shots to ensure, with probability $p$, to observe all, or fraction of all the solutions to a search problem, using the Grover's algorithm.
+  * [x] This repository contains the code  that implements the formulae to be found in the manuscript " " (2022) by Mathieu Kessler[^1], Diego Alonso[^2] and Pedro Sánchez[^2].  They allow to compute the required number of shots to ensure, with probability $p$, to observe all, or a fraction of all the solutions to a search problem, using the Grover's algorithm.
 
 # Contents:
 Following the index of the manuscript, three levels of results are obtained:
@@ -11,29 +11,30 @@ Following the index of the manuscript, three levels of results are obtained:
   
   They only require numpy and can be used as: 
   
-```
-  print("The average number of shots to observe all 100 solutions to the search problem, if the probability of success is pg = 0.95 is:")
+``` python
+  print("The average number of shots to observe all 100 solutions to the search problem")
+  print("if the probability of success is pg = 0.95 is:")
   print(compute_expectation(0.95, 99, 100)
   print(f"while its variance is {compute_variance(0.95, 99, 100)}")
 ```
 
-## Approximations to the number of required shots. 
-  The function compute_n_approx implements equations (7) and (8) of the manuscript, which provide the number s of shots to ensure,  with  given probability p, to observe all (equation (7)) or a fraction of all (equation (8)) solutions. The function implements an argument "case", which admits the value "all" for the implementation of (7) and "proportion" for the implementation of (8). 
+## Approximations to the number of required shots (subsection 2.2) 
+The function compute_n_approx implements equations (7) and (9) of the manuscript, which provide the number s of shots to ensure,  with  given probability p, to observe all (equation (7)) or a fraction of all (equation (9)) solutions. The function implements an argument "case", which admits the value "all" for the implementation of (7) and "proportion" for the implementation of (9). 
 
 It requires numpy and scipy and can be used as:
 
-```
+``` python
 print("The number of shots required to ensure that, with probability 0.9, we observe all 100 solutions to a search problem, having set pg 0.95 is:")
 print("compute_n_approx(0.9, 99, 100, 0.9, "all")
 ```
 
-```
+``` python
 print("The number of shots required to ensure that, with probability 0.9, we observe at least half of the 100 solutions to a search problem, having set pg 0.95 is:")
 print("compute_n_approx(0.9, 49, 100, 0.9, "proportion")
 ```
 
-##  Exact probability mass
-The implementation of formula (9) requires, for large values of $M$ a high precision and range library. This repository contains an implementation in C and an implementation in Python of the exact pmf expression (9). They both use the gmp library. 
+##  Exact probability mass (subsection 2.3)
+The implementation of formula (10) requires, for large values of $M$ a high precision and range library. This repository contains an implementation in C and an implementation in Python of the exact pmf expression (10). They both use the gmp library. 
 
 ### Implementation in C:
 To compile in Linux, assuming that you are in the src directory which contain the .c file:
@@ -49,18 +50,18 @@ You can then specify A, M, pg and s as command line arguments:
 
 Notes:
 1. check that a "results" folder exists at the same level as the containing src folder. The results will be written as a csv file into that folder, each row correspond to an integer $t$
-1. You can use the approximate formula, equations (7) or (8), to have an estimate of the value of $s$ you need to reach the probability you are interested in.
+1. You can use the approximate formula, equations (7) or (9), to have an estimate of the value of $s$ you need to reach the probability you are interested in.
 
 ### Implementation in Python
 
 You should install gmpy2, for example from conda-forge if you use a conda distribution.
 
-The script gmpy2_FX_A_M.py contains the function F_array which admits as arguments: A, M, pg_values which is a list of values of pg we want to use, while s provides the upper limit for the computation of the cumulative distribution function. It also admits the parameter F_threshold which allows to stop the computation if a given value is reached for the cumulative distribution function. 
+The script gmpy2_FX_A_M.py contains the function F_array which admits as arguments: A, M, pg,  an integer s which provides the upper limit for the computation of the cumulative distribution function. It also admits the parameter F_threshold which allows to stop the computation if a given value is reached for the cumulative distribution function. 
 The values of the pmf P(X_{A, M} = t) and cdf P(X_{A, M} <= t) are written to
 a csv file in the RESULTS_DIRECTORY.
 Example of use; 
   
-```
+``` python
 M = 100
 A = 100 - 1  # number of distinct solutions that have been sampled: A + 1
 s = 1350
