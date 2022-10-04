@@ -27,3 +27,16 @@ def compute_n_approx(p, A, M, pg, case):
         raise Exception(f"Invalid value for case parameter: {case}")
 
     return n_approx
+
+
+def compute_quantile(p, F_df):       
+    """Given a value 0<p<1, compute the quantile p of the cumulative distribution corresponding to column "F" in the pandas DataFrame F_df. This dataframe must have as index the values of "t", while the column "F" contains P(X_{A, M} <= t)"""
+    if np.max(F_df["F"]) >= p:
+        idx_threshold = (F_df["F"].values >= p).searchsorted(
+            True, side="left"
+        )
+        n_threshold = F_df.index[idx_threshold]
+    else:
+        raise Exception(f"no value over {p}")
+
+    return n_threshold

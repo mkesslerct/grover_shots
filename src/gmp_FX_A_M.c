@@ -48,11 +48,11 @@ void factA_Stirling_array(mpz_t f_S_a[], int A, int m) {
   }
 }
 
-void F_array(int A, int M, int n, double pg[], int len_pg, double F_threshold) {
+void F_array(int A, int M, int s, double pg, double F_threshold) {
   mpf_t pgg, prg;
 
-  mpz_t f_S_a[n - A];
-  factA_Stirling_array(f_S_a, A, n - 1);
+  mpz_t f_S_a[s - A];
+  factA_Stirling_array(f_S_a, A, s - 1);
 
   mpf_t prob, sum_prob;
   mpf_init(prob);
@@ -76,46 +76,44 @@ void F_array(int A, int M, int n, double pg[], int len_pg, double F_threshold) {
 
   int t;
 
-  for (int i = 0; i < len_pg; i++) {
-    sprintf(file_name, "../results/pmf_cdf_A_%d_M_%d_n_%d_%d.csv", A, M, n,
-            (int)(pg[i] * 1000));
-    FILE *results_file = fopen(file_name, "w+");
-    fprintf(results_file, "t,p,F\n");
+  sprintf(file_name, "../results/pmf_cdf_A_%d_M_%d_s_%d_%d.csv", A, M, s,
+          (int)(pg * 1000));
+  FILE *results_file = fopen(file_name, "w+");
+  fprintf(results_file, "t,p,F\n");
 
-    mpf_init_set_d(pgg, pg[i]);
-    mpf_init_set_d(prg, pg[i] / M);
+  mpf_init_set_d(pgg, pg);
+  mpf_init_set_d(prg, pg / M);
 
-    mpf_set_ui(sum_prob, 0);
-    t = A;
-    while (t <= n && mpf_cmp_d(sum_prob, F_threshold) < 0) {
-      ++t;
-      mpf_set_ui(prob, 0);
-      for (int l = A; l < t; l++) {
-        mpf_ui_sub(one_minus_pg_pow, 1, pgg);
-        mpf_pow_ui(one_minus_pg_pow, one_minus_pg_pow, t - l - 1);
-        mpf_pow_ui(pr_pow, prg, l + 1);
-        mpf_mul(prod, one_minus_pg_pow, pr_pow);
-        mpf_mul_ui(prod, prod, A + 1);
-        mpz_bin_uiui(bin_coef, t - 1, l);
-        mpf_set_z(bin_coef_f, bin_coef);
-        mpf_mul(prod, prod, bin_coef_f);
-        mpf_set_z(s_f, f_S_a[l - A]);
-        mpf_mul(prod, prod, s_f);
-        mpf_add(prob, prob, prod);
-      }
-      mpz_bin_uiui(bin_coef, M, A + 1);
+  mpf_set_ui(sum_prob, 0);
+  t = A;
+  while (t < s && mpf_cmp_d(sum_prob, F_threshold) < 0) {
+    ++t;
+    mpf_set_ui(prob, 0);
+    for (int l = A; l < t; l++) {
+      mpf_ui_sub(one_minus_pg_pow, 1, pgg);
+      mpf_pow_ui(one_minus_pg_pow, one_minus_pg_pow, t - l - 1);
+      mpf_pow_ui(pr_pow, prg, l + 1);
+      mpf_mul(prod, one_minus_pg_pow, pr_pow);
+      mpf_mul_ui(prod, prod, A + 1);
+      mpz_bin_uiui(bin_coef, t - 1, l);
       mpf_set_z(bin_coef_f, bin_coef);
-      mpf_mul(prob, prob, bin_coef_f);
-      mpf_add(sum_prob, sum_prob, prob);
-      gmp_fprintf(results_file, "%d,%.6Ff,%.6Ff\n", t, prob, sum_prob);
+      mpf_mul(prod, prod, bin_coef_f);
+      mpf_set_z(s_f, f_S_a[l - A]);
+      mpf_mul(prod, prod, s_f);
+      mpf_add(prob, prob, prod);
     }
-    gmp_printf("pg: %f, F(%d) computed, value: %.6Ff\n", pg[i], t, sum_prob);
+    mpz_bin_uiui(bin_coef, M, A + 1);
+    mpf_set_z(bin_coef_f, bin_coef);
+    mpf_mul(prob, prob, bin_coef_f);
+    mpf_add(sum_prob, sum_prob, prob);
+    gmp_fprintf(results_file, "%d,%.6Ff,%.6Ff\n", t, prob, sum_prob);
+    gmp_printf("pg: %f, F(%d) computed, value: %.6Ff\n", pg, t, sum_prob);
+  }
 
     fclose(results_file);
-  }
   mpf_clear(pgg);
   mpf_clear(prg);
-  for (int k = 0; k < n - A; k++) {
+  for (int k = 0; k < s - A; k++) {
     mpz_clear(f_S_a[k]);
   }
   mpf_clear(prob);
@@ -130,25 +128,27 @@ void F_array(int A, int M, int n, double pg[], int len_pg, double F_threshold) {
 
 int main(int argc, char *argv[]) {
   if (argc <= 3) {
-    printf("Usage: %s <number A> <number M> <number n> \n", argv[0]);
+    printf("Usage: %s <number A> <number M> <float pg> <number s> \n", argv[0]);
     return 2;
   }
   int A;
   int M;
-  int n;
+  double pg;
+  int s;
 
   A = atoi(argv[1]);
   assert(A >= 0);
   M = atoi(argv[2]);
   assert(M >= A);
-  n = atoi(argv[3]);
-  assert(n >= M);
+  pg = atof(argv[3]);
+  assert(pg > 0 && pg < 1);
+  s = atoi(argv[4]);
+  assert(s >= M);
 
-  double pg[3] = {0.7, 0.95, 0.999};
-
-  int len_pg = sizeof(pg) / sizeof(pg[0]);
-
-  F_array(A, M, n, pg, len_pg, 0.98);
+  F_array(A, M, s, pg, 0.99);
+  // Note:  The last argument is F_threshold, which is set to 0.98 here. If the
+  // cumulative distribution function P(X_{A, M} <= t) exceeds F_threshold
+  // the computation stops before reaching s.
 
   printf("Done!");
 
