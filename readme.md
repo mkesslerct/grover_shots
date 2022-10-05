@@ -4,7 +4,7 @@ This repository contains the code  that implements the formulae to be found in t
 # Contents:
 Following the index of the manuscript, three levels of results are obtained:
 
-##   Expectation and variance of the required number of shots (subsection 2.1) 
+##   Expectation and variance of the required number of shots 
 
 
   The Python script utilities.py contains two functions compute_expectation and compute_variance which implement equations (4) and (5) in the manuscript.
@@ -18,7 +18,7 @@ Following the index of the manuscript, three levels of results are obtained:
   print(f"while its variance is {compute_variance(0.95, 99, 100)}")
 ```
 
-## Approximations to the number of required shots (subsection 2.2) 
+## Approximations to the number of required shots
 The function compute_n_approx implements equations (7) and (9) of the manuscript, which provide the number s of shots to ensure,  with  given probability p, to observe all (equation (7)) or a fraction of all (equation (9)) solutions. The function implements an argument "case", which admits the value "all" for the implementation of (7) and "proportion" for the implementation of (9). 
 
 It requires numpy and scipy and can be used as:
@@ -35,7 +35,7 @@ print("at least half of the 100 solutions to a search problem, with pg = 0.95 is
 print("compute_n_approx(0.9, 49, 100, 0.9, "proportion")
 ```
 
-##  Exact probability mass (subsection 2.3)
+##  Exact probability mass function (pmf)
 The implementation of formula (10) requires, for large values of $M$ a high precision and range library. This repository contains an implementation in C and an implementation in Python of the exact pmf expression (10). They both use the gmp library. 
 
 ### Implementation in C:
@@ -61,7 +61,7 @@ You should install gmpy2, for example from conda-forge if you use a conda distri
 The script gmpy2_FX_A_M.py contains the function F_array which admits as arguments: A, M, pg,  an integer s which provides the upper limit for the computation of the cumulative distribution function. It also admits the parameter F_threshold which allows to stop the computation if a given value is reached for the cumulative distribution function. 
 The values of the pmf P(X_{A, M} = t) and cdf P(X_{A, M} <= t) are written to
 a csv file in the RESULTS_DIRECTORY.
-Example of use; 
+Example of use: 
   
 ``` python
 M = 100
@@ -72,7 +72,7 @@ F_array(A, M, s, pg, F_threshold=0.98)
 ```
 
 ### Example of computation of quantile: 
-Assume that you have used either the Python script or the C implementation to compute the values of the cumulative distribution F, for A, M, a value pg and s. In order to compute the value of $s$ that fulfills $P(X_{A, M} <= s) = p$, the Python function `compute_quantile` from the `utilities.py` file can be used:
+Assume that you have used either the Python script or the C implementation to compute the values of the cumulative distribution F, for A, M, a value pg and s. The results are stored in an csv file called, for example, `pmf_cdf_A_9_M_10_s_200_700.csv` in the `results` folder.  In order to compute the value of $s$ that fulfills $P(X_{A, M} <= s) = p$, the Python function `compute_quantile` from the `utilities.py` file can be used:
 
 ``` python
 from pathlib import Path
