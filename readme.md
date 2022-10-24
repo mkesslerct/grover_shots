@@ -1,5 +1,5 @@
 # Introduction
-This repository contains the code  that implements the formulae to be found in the manuscript " " (2022) by Mathieu Kessler[^1], Diego Alonso[^2] and Pedro Sánchez[^2].  They allow to compute the required number of shots to ensure, with probability $p$, to observe all, or a fraction of all the solutions to a search problem, using the Grover's algorithm.
+This repository contains the code  that implements the formulae to be found in the manuscript "Determination of the number of shots for Grover's search algorithm" (2022) by Mathieu Kessler[^1], Diego Alonso[^2] and Pedro Sánchez[^2].  They allow to compute the required number of shots to ensure, with probability $p$, to observe all, or a fraction of all the solutions to a search problem, using the Grover's algorithm.
 
 # Contents:
 Following the index of the manuscript, three levels of results are obtained:
