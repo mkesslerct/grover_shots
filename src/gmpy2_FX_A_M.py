@@ -73,7 +73,7 @@ def F_array(A, M, s, pg, F_threshold):
                     factA_S_array[l - A],
                 ),
             )
-            proba = mul(proba, bincoef(M, A + 1))
+        proba = mul(proba, bincoef(M, A + 1))
         sum_proba = add(sum_proba, proba)
         results_file.write(
             f"{t},{'{:.6Nf}'.format(proba)},{'{:.6Nf}'.format(sum_proba)}\n"
